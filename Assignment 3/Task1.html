@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      tr:hover {
+        background-color: #f5f5f5;
+      }
+      button{
+        background-color: #303030;
+        color: white;
+      }
+      button:hover{
+        background-color: transparent;
+        color: #303030;
+        border: solid;
+        border-color: #303030;
+      }
+      .remove-btn {
+        background-color: #303030;
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        cursor: pointer;
+      }
+
+      .remove-btn:hover {
+        background-color: transparent;
+        color: #303030;
+        border: solid;
+        border-color: #303030;
+      }
+
+      .form-container {
+        margin-bottom: 20px;
+      }
+
+      .form-container input {
+        margin-right: 10px;
+      }
+
+      .pagination {
+        margin-top: 10px;
+      }
+
+      .pagination button {
+        background-color: #303030;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .pagination button.active {
+        background-color: #303030;
+      }
+
+      .pagination button:hover:not(.active) {
+        background-color: transparent;
+        color: #303030;
+        border: solid;
+        border-color: #303030;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required />
+      <label for="place">Place:</label>
+      <input type="text" id="place" name="place" required />
+      <button onclick="addData()">Add</button>
+    </div>
+
+    <table id="data-table">
+      <tr>
+        <th>Name</th>
+        <th>Place</th>
+        <th>Action</th>
+      </tr>
+    </table>
+
+    <div class="pagination">
+      <button onclick="previousPage()">Previous</button>
+      <button onclick="nextPage()">Next</button>
+    </div>
+
+    <script>
+      var data = [
+        ["Aneri", "New York"],
+        ["Priyanshu", "London"],
+        ["Unnati", "Paris"],
+        ["Preksha", "Pakistan"],
+        ["Isha", "Valsad"],
+        ["Mamta", "Rajasthan"],
+        ["Vishwa", "Surat"],
+        ["Jeel", "Ankleshwar"],
+        ["Dhrumil", "Bhavnagar"],
+        ["Vraj", "Mehsana"],
+        ["Yash", "Baroda"],
+        ["Om", "Navsari"],
+        ["Kush", "Amalsad"],
+        ["Meet", "Bharuch"],
+        ["Shivang", "Vapi"],
+        ["Het", "Palitana"],
+        ["Disha", "Anand"],
+        ["Dhyani", "Nadiad"],
+        ["Himja", "Canada"],
+      ];
+
+      var currentPage = 1;
+      var itemsPerPage = 5;
+      var totalPages = Math.ceil(data.length / itemsPerPage);
+
+      function displayData() {
+        var startIndex = (currentPage - 1) * itemsPerPage;
+        var endIndex = startIndex + itemsPerPage;
+        var displayData = data.slice(startIndex, endIndex);
+
+        var table = document.getElementById("data-table");
+        table.innerHTML = "<tr><th>Name</th><th>Place</th><th>Action</th></tr>";
+
+        for (var i = 0; i < displayData.length; i++) {
+          var row = table.insertRow(-1);
+          var nameCell = row.insertCell(0);
+          var placeCell = row.insertCell(1);
+          var actionCell = row.insertCell(2);
+          nameCell.innerHTML = displayData[i][0];
+          placeCell.innerHTML = displayData[i][1];
+          actionCell.innerHTML =
+            "<button class='remove-btn' onclick='removeRow(" +
+            (startIndex + i) +
+            ")'>Remove</button>";
+        }
+      }
+
+      function removeRow(index) {
+        data.splice(index, 1);
+        updatePagination();
+        displayData();
+      }
+
+      function addData() {
+        var nameInput = document.getElementById("name");
+        var placeInput = document.getElementById("place");
+
+        var name = nameInput.value.trim();
+        var place = placeInput.value.trim();
+
+        if (name && place) {
+          data.push([name, place]);
+          updatePagination();
+          displayData();
+          nameInput.value = "";
+          placeInput.value = "";
+        }
+      }
+
+      function previousPage() {
+        if (currentPage > 1) {
+          currentPage--;
+          displayData();
+        }
+      }
+
+      function nextPage() {
+        if (currentPage < totalPages) {
+          currentPage++;
+          displayData();
+        }
+      }
+
+      function updatePagination() {
+        totalPages = Math.ceil(data.length / itemsPerPage);
+        if (currentPage > totalPages) {
+          currentPage = totalPages;
+        }
+      }
+
+      displayData();
+    </script>
+  </body>
+</html>
